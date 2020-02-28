@@ -1,30 +1,18 @@
 <script>
-	export let name;
+	// child components
+	import Header from './layout/Header.svelte';
+	import MainContent from './layout/MainContent.svelte';	
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<div class="" id="wrapper">
 
-<style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+	<Header bgImg="bgImgSrc"></Header>
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
+	<div id="main-content">
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
-</style>
+		<MainContent></MainContent>
+	
+	</div>
+
+</div>
+
