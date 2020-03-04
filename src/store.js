@@ -1,6 +1,10 @@
 // import { writable } from 'svelte/store';
 
-const myStore = {
+const store = {
+    user: {
+        isLoggedIn: false,
+        username: null
+    },
     history: [
         {
             id: 3015298,
@@ -22,11 +26,12 @@ const myStore = {
 import { writable } from 'svelte/store';
 
 const createWritableStore = (key, startValue) => {
-    const { subscribe, set } = writable(startValue);
+    const { subscribe, set, update } = writable(startValue);
 
     return {
         subscribe,
         set,
+        update,
         useLocalStorage: () => {
             const json = localStorage.getItem(key);
             if (json) {
@@ -40,4 +45,4 @@ const createWritableStore = (key, startValue) => {
     };
 }
 
-export const store = createWritableStore('recordStore', myStore);
+export const appStore = createWritableStore('appStore', store);

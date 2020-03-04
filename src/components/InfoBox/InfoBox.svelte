@@ -58,7 +58,7 @@ function updateStorage(store) {
     padding: 15px;
     position: absolute;
     right: 0;
-    top: 60px;
+    bottom: 80px;
     transform: translateX(110%);
     transition: .5s ease all;
     width: 200px;
@@ -73,7 +73,7 @@ function updateStorage(store) {
 }
 </style>
 
-<InfoButton on:toggle={toggleBox}></InfoButton>
+<InfoButton on:toggle={toggleBox} isOpen={isOpen}></InfoButton>
 
 <div class="infoBox" class:isOpen={isOpen}>
     <ul>

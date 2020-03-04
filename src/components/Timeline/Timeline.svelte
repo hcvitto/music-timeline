@@ -1,20 +1,25 @@
 <script>
 // store
-import { store } from '../../store';
+import { appStore } from '../../store';
 let steps;
-$: store.subscribe(history => {
-    steps = history.history;
+$: appStore.subscribe(store => {
+    steps = store.history;
 });
 
 let currentYear = new Date();
 currentYear = currentYear.getFullYear();
 
-let currentAction = 'Show';
-function toggleAdd() {
-    currentAction = currentAction === 'Show' ? 'Hide' : 'Show';
-}
+// let currentAction = 'Show';
+// function toggleAdd() {
+//     currentAction = currentAction === 'Show' ? 'Hide' : 'Show';
+// }
 function calculateLeftPos(pos) {
     return window.innerWidth * pos / currentYear;
+}
+function recalculateLeftPos() {
+    steps.forEach(step => {
+        document.getElementById('_' + step.id).style.left = calculateLeftPos(step.pos) + 'px';
+    });
 }
 function showInfo(id) {
     document.getElementById('_' + id).classList.toggle("visible");
@@ -23,7 +28,11 @@ function showInfo(id) {
 
 <style type="text/scss">
 .timeline {
-    border: 1px solid green;
+    background: 
+		repeating-linear-gradient(90deg, 
+				#e7b2a5 5% 10%, 
+                #ba6b57 10% 15%);
+    height: 2px;
     position: relative;
     width: 100%;
     li {
@@ -61,7 +70,7 @@ function showInfo(id) {
         }
         &:nth-child(odd) {
             .pointer {
-                border: 2px solid red;
+                border: 2px solid #30475e;
             }
             .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(0);
@@ -74,7 +83,7 @@ function showInfo(id) {
         }
         &:nth-child(even) {
             .pointer {
-                border: 2px solid blue;
+                border: 2px solid #30475e;
             }
              .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(0);
@@ -97,7 +106,7 @@ function showInfo(id) {
     }
 }
 </style>
-
+<svelte:window on:resize={recalculateLeftPos}/>
 <div class="timeline-wrapper">
     <ul class="timeline">
     {#each steps as curr}

@@ -17,23 +17,15 @@ button {
     cursor: pointer;
     height: 36px;
     position: absolute;
-    right: 15px;
-    bottom: 15px;
-    transform: rotate(0deg);
+    right: 0;
+    top: 0;
+    transform: rotate(0);
     transition: .5s ease all;
     width: 36px;
+    z-index: 5;
+
     &.isOpen {
         transform: rotate(225deg);
-        div {
-            span {
-                &:first-child {
-                    opacity: 0;
-                }
-                &:last-child {
-                    opacity: 1;
-                }
-            }
-        }
     }
     div {
         height: 100%;
@@ -46,12 +38,6 @@ button {
             right: 0;
             top: 0;
             transition: .5s ease all;
-            &:first-child {
-                opacity: 1;
-            }
-            &:last-child {
-                opacity: 0;
-            }
         }
     }
 }
@@ -59,7 +45,6 @@ button {
 
 <button class:isOpen={isOpen} on:click={toggle}>
     <div>
-        <span>?</span>
         <span>+</span>
     </div>
 </button>

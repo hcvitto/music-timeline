@@ -1,7 +1,9 @@
 <script>
-	// child components
-	import Header from './layout/Header.svelte';
-	import MainContent from './layout/MainContent.svelte';	
+// child components
+import InfoBox from "./components/InfoBox/InfoBox.svelte";
+import Header from './layout/Header.svelte';
+import MainContent from './layout/MainContent.svelte';	
+import Footer from './layout/Footer.svelte';	
 </script>
 
 <div class="" id="wrapper">
@@ -13,6 +15,9 @@
 		<MainContent></MainContent>
 	
 	</div>
+
+    <InfoBox></InfoBox>
+
 
 </div>
 

@@ -1,8 +1,88 @@
 <script>
-import InfoBox from "../components/InfoBox/InfoBox.svelte";
+import { fade, fly } from 'svelte/transition';
+
+// store
+import { appStore } from '../store.js';
+
+import { auth } from '../config/firebase/config';
+import { logoutUser } from '../config/firebase/auth';
+
+import { NotificationDisplay } from '@beyonk/svelte-notifications';
+
+import Registration from '../auth/Registration.svelte';
+import Login from '../auth/Login.svelte';
+
+import * as notifiy from '../service/notification';
 
 export let appTitle = "Music timeline";
-export let bgImgSrc = "https://lh3.googleusercontent.com/DtTDVG5hB511J5fVWBA1WafPOYH53jA32yRDmeg3pqANODWMlB3M9JdSb-8vgPVjbTc97ICD3i9H9XU-PBgWZGsapLzGNtDps8hhxmLuFAOe9eRmXMMhAVp125W7593rJ30Cvbzb0PMIf3Qe2EVsjkX97_l9zUne9rVIWctKLqOZV_YwT6cMtJfKOTbK-kAUYJhwWg-GbSMhvxK9Myau7wJWsPuDde_b1HXtvMlVNai493GoUp3ysO1_RYKSLaLetc2VoVfSh_pJWZ8uZU7IdVpTq2bb3tepcgz8lq_t98wHrWSo3vqqrImZjfyeKB3Y2Jb_GRSN4cltWSgB1h_04iFYQbWEYX37mrtADNuFRdGpt5yFWmIuQdFkCCsRFwOA32m_j1AbFRbGr_dM1DRisUQE7HnhDcf3F7kr8j9ZWqrx921oqFumOSyrujAhJQkZwOnH6ujLQAreuMhQ5APcj_xbWr1vYzKpVSg06Fz7N7sK4VVDZpBnXfHonSWOZLIxQZaxL2tSl8TQXdUP5HPLASHILtznO8zIg1BldMaCsbkGPIDHI2lIwMQ8uC4nGE_5Vx_Hp7YCMJByPdgSzKjR5J9NadBpqeNuFINmzE4xsuvIxxm1rVDiBtd4tabkk7Lp_-P2twtq0HzL0qmdwS1uqa_TcsVh5ir0-8VUDZGWD1vnF9MtjlrFBA=s250-k-rw-no"
+export let bgImgSrc = "";
+
+let wantsRegister = false;
+let wantsLogin = false;
+let canWrite = false;
+
+let user;
+$: appStore.subscribe(store => {
+    user = store.user;
+});
+
+const animationObj = { x: 200, duration: 500};
+
+auth.onAuthStateChanged(function (user) {
+    if (user) {
+        let u = {
+            loggedIn: true,
+            username: user.email
+        };
+        appStore.update(store => {
+            return {
+                ...store,
+                user: u
+            };
+        });
+    }
+});
+
+function toggleRegForm() {
+    wantsLogin = false;
+    wantsRegister = !wantsRegister;
+}
+function toggleLoginForm() {
+    if (user && user.isLoggedIn) {
+        logoutUser()
+            .then(res => {
+                canWrite = false;
+                appStore.update(store => {
+                    return {
+                        ...store,
+                        user: {
+                            isLoggedIn: false,
+                            username: null
+                        }
+                    };
+                });
+            })
+            .catch(error => {
+                console.log('logout error:', error);
+            });
+    } else {
+        wantsRegister = false;
+        wantsLogin = !wantsLogin;
+    }
+}
+function regOK(event) {
+    wantsRegister = false;
+    // what to do next??
+}
+function regKO(event) {
+}
+function loginOK(event) {
+    wantsLogin = false;
+    // TODO
+    // set user as loggedin appWide
+    // show private components
+    canWrite = true;
+}
 </script>
 
 <style type="text/scss">
@@ -19,17 +99,82 @@ header {
             #00a3e0 0);
     align-items: center;
     display: flex;
+    justify-content: space-between;
     padding-left: 15px;
     position: relative;
 
     h1 {
         color: var(--main-text-color);
         color: #fff;
+        font-family: 'Tangerine';
+        font-size: 3rem;
+        margin: 0
     }
+    .user-nav {
+        align-items: center;
+        color: #fff;
+        display: flex;
+        margin-right: 15px;
+        span {
+            margin-right: 15px;
+        }
+        i {
+            color: #fff;
+            cursor: pointer;
+            font-size: 2rem;
+            &.login-icon {
+                transform: scaleX(-1);
+            }
+        }
+        &.isLoggedIn {
+            i {
+                &.login-icon {
+                    transform: scaleX(1);
+                }
+            }
+        }
+    }
+}
+.reg-form-wrapper,
+.login-form-wrapper {
+    position: absolute;
+    right: 8px;
+    top: 95px;
+    z-index: 5;
 }
 </style>
 
+<NotificationDisplay />
+
 <header>
-    <InfoBox></InfoBox>
     <h1>{appTitle}</h1>
+    <div class="user-nav" class:isLoggedIn={user && user.isLoggedIn}>
+        {#if user && user.isLoggedIn}
+        <span transition:fade>Hi, {user.username}</span>
+        {/if}
+        {#if user && !user.isLoggedIn}
+        <i class="material-icons register-icon" transition:fade on:click={toggleRegForm}>emoji_people</i>
+        {/if}
+        <i class="material-icons login-icon" on:click={toggleLoginForm}>transfer_within_a_station</i>
+    </div>
 </header>
+{#if wantsRegister}
+    <div class="reg-form-wrapper"
+        in:fly="{animationObj}"
+        out:fly="{animationObj}"
+    >
+        <Registration
+            on:regDone={ notifiy.showSuccessToast} on:regDone={regOK}
+            on:regError={notifiy.showErrorToast}></Registration>
+    </div>
+{/if}
+{#if wantsLogin}
+    <div class="login-form-wrapper"
+        in:fly="{animationObj}"
+        out:fly="{animationObj}"
+    >
+        <Login
+            on:loginDone={notifiy.showSuccessToast} on:loginDone={loginOK}
+            on:loginError={notifiy.showErrorToast}></Login>
+    </div>
+{/if}
