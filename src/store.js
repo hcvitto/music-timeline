@@ -5,22 +5,7 @@ const store = {
         isLoggedIn: false,
         username: null
     },
-    history: [
-        {
-            id: 3015298,
-            date: "1045",
-            description: "Description",
-            pos: 1045,
-            title: "Guido d'Arezzo inventa le note",
-        },
-        {
-            id: 543565,
-            date: "ca  1400",
-            description: "Description",
-            pos: 1400,
-            title: "Qualcuno inventa il rigo musicale",
-        }
-    ]
+    history: []
 };
 
 import { writable } from 'svelte/store';

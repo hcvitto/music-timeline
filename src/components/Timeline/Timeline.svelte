@@ -1,4 +1,8 @@
 <script>
+import { onMount } from 'svelte';
+
+import { getSteps } from '../../service/steps';
+
 // store
 import { appStore } from '../../store';
 let steps;
@@ -9,10 +13,20 @@ $: appStore.subscribe(store => {
 let currentYear = new Date();
 currentYear = currentYear.getFullYear();
 
-// let currentAction = 'Show';
-// function toggleAdd() {
-//     currentAction = currentAction === 'Show' ? 'Hide' : 'Show';
-// }
+async function getTimeline() {
+    try {
+        steps = await getSteps();
+        appStore.update(store => {
+            store = {
+                ...store,
+                history: steps
+            };
+            return store
+        });
+    } catch(err) {
+        alert(err);
+    }
+}
 function calculateLeftPos(pos) {
     return window.innerWidth * pos / currentYear;
 }
@@ -24,6 +38,10 @@ function recalculateLeftPos() {
 function showInfo(id) {
     document.getElementById('_' + id).classList.toggle("visible");
 }
+onMount(() => {
+    getTimeline();
+});
+
 </script>
 
 <style type="text/scss">
@@ -41,10 +59,11 @@ function showInfo(id) {
 
         .box-wrapper {
             position: relative;
-            z-index: 1;
+            // z-index: 1;
         }
         .pointer {
             background: #fff;
+            border: 2px solid #30475e;
             border-radius: 50%;
             cursor: pointer;
             height: 10px;
@@ -56,6 +75,7 @@ function showInfo(id) {
             }
         }
         .info-box {
+            background: #fff;
             border: 1px solid rgba(0,0,0,.5);
             border-radius: 10px;
             box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
@@ -67,11 +87,15 @@ function showInfo(id) {
             top: 0;
             transition: all ease-in-out .3s;
             z-index: 2;
+            &:hover {
+                z-index: 10;
+            }
+
         }
         &:nth-child(odd) {
-            .pointer {
-                border: 2px solid #30475e;
-            }
+            // .pointer {
+            //     border: 2px solid #30475e;
+            // }
             .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(0);
            }
@@ -82,9 +106,9 @@ function showInfo(id) {
            }
         }
         &:nth-child(even) {
-            .pointer {
-                border: 2px solid #30475e;
-            }
+            // .pointer {
+            //     border: 2px solid #30475e;
+            // }
              .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(0);
             }

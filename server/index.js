@@ -5,6 +5,11 @@ const http = require('http');
 
 const body_parser = require("body-parser");
 app.use(body_parser.json());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const port = 3000;
 
@@ -27,6 +32,7 @@ db.initialize(dbName, collectionName, function(dbCollection) { // success callba
 
   app.post('/step', (request, response) => {
     const item = request.body;
+    console.log(request);
     dbCollection.insertOne(item, (error, result) => {
       if (error) throw error;
       dbCollection.find().toArray(function (_error, _result) {
