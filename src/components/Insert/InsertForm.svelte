@@ -1,40 +1,43 @@
 <script>
-import { addStep } from '../../service/steps';
+import { createEventDispatcher } from 'svelte';
 
-import { appStore } from '../../store.js';
+export let editingObj;
+
 let store;
-$: appStore.subscribe(store => {
-});
+$: date = editingObj ? editingObj.date : null;
+$: pos = editingObj ?  editingObj.pos : null;
+$: title = editingObj ? editingObj.title : null;
+$: description = editingObj ? editingObj.description : null;
 
-let date;
-let pos;
-let title;
-let description;
-
-async function addItem() {
-    const step = {
+const dispatchAdd = createEventDispatcher();
+const dispatchEdit = createEventDispatcher();
+const dispatchReset = createEventDispatcher();
+function submitForm() {
+    if (editingObj) {
+        dispatchEdit('edit', getItemObject(true));
+    } else {
+        dispatchAdd('add', getItemObject());
+    }
+    resetForm();
+}
+function getItemObject(isEdit) {
+    let item = {
         title: title,
         date: date,
         pos: pos,
         description: description
     }
-    let steps = await addStep(getItemObject(step));
-    document.getElementById('add-form').reset();
-    appStore.update(store => {
-        store = {
-            ...store,
-            history: steps
-        };
-        return store
-    });
+    if (isEdit) {
+        item._id = editingObj._id;
+        item.id = editingObj.id;
+
+    } 
+    return item;
 }
-function getItemObject(item) {
-    return {id: Math.floor(Math.random(1)*10000000),
-        title: item.title,
-        date: item.date,
-        pos: item.pos,
-        description: item.description
-    };
+function resetForm() {
+    document.getElementById('add-form').reset();
+    date = pos = title = description = null;
+    dispatchReset('reset');
 }
 </script>
 
@@ -65,9 +68,13 @@ input[type=text] {
 }
 </style>
 
-<h3>Insert new event</h3>
+<h3>{ editingObj ? "Edit" : "Insert new" } event</h3>
 
-<form id="add-form" on:submit|preventDefault={addItem}>
+<form id="add-form" on:submit|preventDefault={submitForm}>
+    {#if editingObj}
+    <input type="hidden" name="_id" value={editingObj._id}>
+    <input type="hidden" name="id" value={editingObj.id}>
+    {/if}
     <div>
         <label>Date</label>
         <input type="text" name="date" bind:value={date}>
@@ -85,6 +92,7 @@ input[type=text] {
         <input type="text" name="description" bind:value={description}>
     </div>
     <div>   
-        <button>Add</button>
+        <button disabled={!date && !pos && !title && !description}>{ editingObj ? "Edit" : "Insert" }</button>
+        <button type="reset" on:click={resetForm}>Reset</button>
     </div>
 </form>

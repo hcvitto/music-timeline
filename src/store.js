@@ -5,7 +5,8 @@ const store = {
         isLoggedIn: false,
         username: null
     },
-    history: []
+    history: [],
+    editingObj: null
 };
 
 import { writable } from 'svelte/store';
