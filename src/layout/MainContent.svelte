@@ -5,7 +5,7 @@ import InsertStep from '../components/Insert/InsertStep.svelte';
 import { auth } from '../config/firebase/config';
 
 // store
-import { appStore } from '../store.js';
+import { appStore } from '../store/store';
 let user;
 $: appStore.subscribe(store => {
     user = store.user;

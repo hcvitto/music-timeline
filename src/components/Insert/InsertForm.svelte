@@ -1,79 +1,56 @@
 <script>
-// store
-import { appStore } from '../../store.js';
-let store;
-$: appStore.subscribe(store => {
-    store = store.history;
-});
+import { createEventDispatcher } from 'svelte';
 
-let date;
-let title;
-let description;
+export let editingObj;
 
-function addEvent() {
-    
+// $: date = editingObj ? editingObj.date : null;
+// $: pos = editingObj ?  editingObj.pos : null;
+// $: title = editingObj ? editingObj.title : null;
+// $: description = editingObj ? editingObj.description : null;
+
+$: o = editingObj || {
+        date: null,
+        pos: null,
+        title: null,
+        description: null
+    }
+const dispatchAdd = createEventDispatcher();
+const dispatchEdit = createEventDispatcher();
+const dispatchReset = createEventDispatcher();
+
+function submitForm() {
+    if (editingObj) {
+        dispatchEdit('edit', getItemObject(true));
+    } else {
+        dispatchAdd('add', getItemObject());
+    }
+    resetForm();
 }
-// async function searchAlbum() {
-//     albumResult = null;
-//     imgUrl = null;
-//     isLoading = true;
-//     proposalCounter = 0;
-//     try {
-//         let res = await getAlbums(album, token);
-//         albumResult = await res.json();
-//         if (albumResult && albumResult.albums && albumResult.albums.items) {
-//             hasResults = true;
-//             currentAlbumObj = albumResult.albums.items[proposalCounter];
-//             imgUrl = currentAlbumObj.images[0].url;
-//             noMoreResults = false;
-//             totalResults = albumResult.albums.items.length;
-//         }
-//         isLoading = false;
-//     } catch(err) {
-//         alert(err);
-//     }
-// }
-// function getImgUrl(obj) {
-//     return obj.images[0].url;
-// }
-// function acceptAlbum() {
-//     store = {
-//         ...store,
-//         records: [...store.records, mapRecordObject(currentAlbumObj)]
-//     };
-//     recordStore.set(store);
-//     album = null;
-//     albumResult = null;
-//     hasResults = false;
-//     imgUrl = null;
-//     proposalCounter = 0;
-//     totalResults = null;
-//     vote = 0;
-// }
-// function refuseAlbum() {
-//     if ((proposalCounter+1) == albumResult.albums.items.length) {
-//         noMoreResults = true;
-//         proposalCounter = 0;
-//         imgUrl = null;
-//     } else {
-//         proposalCounter++;
-//         currentAlbumObj = albumResult.albums.items[proposalCounter];
-//         imgUrl = getImgUrl(currentAlbumObj);
-//     }
-// }
-// function mapRecordObject(recObj) {
-//     let newRec = {
-//         id: Math.floor(Math.random(1)*10000000),
-//         title: recObj.name,
-//         bandName: recObj.artists[0].name,
-//         image: recObj.images[0].url,
-//         vote: vote
-//     };
-//     return newRec;
-// }
-// function afterRate(rate) {
-//     vote = rate;
-//   };
+function getItemObject(isEdit) {
+    let item = {
+        id: Math.floor(Math.random(1) * 1000000),
+        title: o.title,
+        date: o.date,
+        pos: +(o.pos),
+        description: o.description
+    }
+    if (isEdit) {
+        item._id = editingObj._id;
+        item.id = editingObj.id;
+    } 
+    return item;
+}
+function resetForm() {
+    // TODO: manipulate DOM ???
+    document.getElementById('add-form').reset();
+    o = {
+        date: null,
+        pos: null,
+        title: null,
+        description: null
+    };
+    dispatchReset('reset');
+}
 </script>
 
 <style type="text/scss">
@@ -103,22 +80,31 @@ input[type=text] {
 }
 </style>
 
-<h3>Insert new event</h3>
+<h3>{ editingObj ? "Edit" : "Insert new" } event</h3>
 
-<form on:submit|preventDefault={addEvent}>
+<form id="add-form" on:submit|preventDefault={submitForm}>
+    {#if editingObj}
+    <input type="hidden" name="_id" value={editingObj._id}>
+    <input type="hidden" name="id" value={editingObj.id}>
+    {/if}
     <div>
         <label>Date</label>
-        <input type="text" name="date" bind:value={date}>
+        <input type="text" name="date" bind:value={o.date}>
+    </div>
+    <div>
+        <label>Pos</label>
+        <input type="number" name="pos" bind:value={o.pos}>
     </div>
     <div>
         <label>Title</label>
-        <input type="text" name="title" bind:value={title}>
+        <input type="text" name="title" bind:value={o.title}>
     </div>
     <div>
         <label>Description</label>
-        <input type="text" name="description" bind:value={description}>
+        <textarea name="description" rows="5" bind:value={o.description}></textarea>
     </div>
     <div>   
-        <button>Add</button>
+        <button disabled={!o.date || !o.pos || !o.title || !o.description}>{ editingObj ? "Edit" : "Insert" }</button>
+        <button type="reset" on:click={resetForm}>Reset</button>
     </div>
 </form>

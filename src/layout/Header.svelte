@@ -2,7 +2,7 @@
 import { fade, fly } from 'svelte/transition';
 
 // store
-import { appStore } from '../store.js';
+import { appStore } from '../store/store';
 
 import { auth } from '../config/firebase/config';
 import { logoutUser } from '../config/firebase/auth';
