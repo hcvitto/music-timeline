@@ -41,7 +41,7 @@ db.initialize(dbName, collectionName, function(dbCollection) { // success callba
   // get all items
   // return all collection documents
   app.get('/steps', (request, response) => {
-    dbCollection.find().toArray(function (_error, _result) {
+    dbCollection.find().sort({ pos: -1 }).toArray(function (_error, _result) {
       if (_error) throw _error;
       response.json(_result);
     });
@@ -61,25 +61,18 @@ db.initialize(dbName, collectionName, function(dbCollection) { // success callba
   // update an item
   // return ***
   app.put('/step', (request, response) => {
-    console.log('_______put request', request.body);
     const query = { "_id": new mongo.ObjectId(request.body.id) };
     const data = request.body;
     dbCollection.findOneAndUpdate(
       query,
       {
-        $set: {
-          title: request.body.title
-        }
+        $set: data
       },
       {},
       (error, result) => {
         if (error) throw error;
-        console.log('_______put request', result);
-        response.json(result);
-        // dbCollection.findOne({ id: result }, (_error, _result) => {
-        //   if (_error) throw _error;
-        //   response.json(_result);
-        // });
+        const res = { saved: result.ok ? true : false }
+        response.json(res);
     });
   });
 

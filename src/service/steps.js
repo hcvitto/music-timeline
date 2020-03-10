@@ -26,7 +26,6 @@ export function addStep(step) {
 };
 
 export function editStep(step) {
-    console.log('editStep body', step);
     return fetch(apiURL + 'step', {
         method: 'PUT',
         headers: {

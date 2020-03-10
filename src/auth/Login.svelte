@@ -3,7 +3,7 @@ import { createEventDispatcher } from 'svelte';
 import { loginUser } from '../config/firebase/auth';
 
 // store
-import { appStore } from '../store.js';
+import { appStore } from '../store/store';
 let user;
 $: appStore.subscribe(store => {
     user = store.user;

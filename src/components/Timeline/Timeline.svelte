@@ -3,7 +3,7 @@ import { onMount } from 'svelte';
 
 import { auth } from '../../config/firebase/config';
 import { getSteps } from '../../service/steps';
-import { appStore } from '../../store';
+import { appStore } from '../../store/store';
 
 import StepBox from './StepBox.svelte';
 

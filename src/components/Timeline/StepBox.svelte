@@ -1,7 +1,7 @@
 <script>
 import { onDestroy } from 'svelte';
 import { deleteStep } from '../../service/steps';
-import { appStore } from '../../store';
+import { appStore } from '../../store/store';
 
 export let step;
 export let windowWidth;
@@ -17,7 +17,8 @@ currentYear = currentYear.getFullYear();
 
 let box;
 let isVisible;
-$: leftPos = windowWidth * step.pos / currentYear;
+let isFixed;
+$: leftPos = windowWidth * (+step.pos) / currentYear;
 
 async function deleteItem(step) {
     if (confirm('Are you sure?')) {
@@ -43,6 +44,9 @@ function removeEl(store, el) {
 }
 function toggleInfo() {
     isVisible = !isVisible;
+}
+function toggleFixed() {
+    isFixed = !isFixed;
 }
 function editItem(step) {
     console.log('editItem:', step);
@@ -104,7 +108,8 @@ li {
         .info-box {
             transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(0);
         }
-        &.visible {
+        &.visible,
+        &.isFixed {
             .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(1);
             }
@@ -114,13 +119,15 @@ li {
         .info-box {
             transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(0);
         }
-        &.visible {
+        &.visible,
+        &.isFixed {
             .info-box {
                 transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(1);
             }
         }
     }
-    &.visible {
+    &.visible,
+    &.isFixed {
         .pointer {
             transform: translateY(-7px) scale(1.5);
         }
@@ -131,9 +138,9 @@ li {
 
 }
 </style>
-<li class="step" class:visible={isVisible} style="left: { leftPos }px">
+<li class="step" class:visible={isVisible} class:isFixed={isFixed} style="left: { leftPos }px">
     <div class="box-wrapper">
-        <div class="pointer" on:click={toggleInfo}></div>
+        <div class="pointer" on:click={toggleFixed} on:mouseover={toggleInfo} on:mouseout={toggleInfo}></div>
         <div class="info-box">
             <strong>{ step.date }</strong>
             <div class="title">{ step.title }</div>
