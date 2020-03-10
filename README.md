@@ -8,6 +8,14 @@ Test app for svelte + firebase auth + CRUD mongoDb on mongoAtlas
 
 ## Settings
 
+### App todo
+
+Feature implemented / to implement..for local usage
+
+```javascript
+[{id: 3248,title: 'simple store',done: true},{id: 5664,title: 'persistent storage',done: true},{id: 3261,title: 'dom manipulation',done: true},{id: 6140,title: 'auth (firebase)',done: true},{id: 9728,title: 'context',done: false},{id: 7476,title: 'animation',done: true},{id: 2699,title: 'manipulate DOM on window events',done: true},{id: 7703,title: 'create server',done: true},{id: 1957,title: 'sync local storage anc db',done: false},{id: 2808,title: 'fix some gui style',done: true}]
+```
+
 ### FRONTEND
 
 Create a file src/config/settings.js with firebase setting from Fb console, ie: 
@@ -88,7 +96,6 @@ If you're building a single-page app (SPA) with multiple routes, sirv needs to b
 ```js
 "start": "sirv public --single"
 ```
-
 
 ## Deploying to the web
 

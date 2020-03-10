@@ -114,6 +114,7 @@ li {
         }
         .description {
             font-size: .8rem;
+            word-break: break-word
         }
         .button-wrapper {
             border-top: 1px solid #ba6b57;
