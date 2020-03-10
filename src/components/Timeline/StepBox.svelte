@@ -103,6 +103,24 @@ li {
         &:hover {
             z-index: 10;
         }
+
+        strong {
+            font-size: .8rem;
+            font-weight: normal;
+        }
+        .title {
+            font-size: .9rem;
+            font-weight: 500;
+        }
+        .description {
+            font-size: .8rem;
+        }
+        .button-wrapper {
+            border-top: 1px solid #ba6b57;
+            font-size: .8rem;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
     }
     &:nth-child(odd) {
         .info-box {
@@ -144,9 +162,12 @@ li {
         <div class="info-box">
             <strong>{ step.date }</strong>
             <div class="title">{ step.title }</div>
+            <div class="description">{ step.description }</div>
             {#if canWrite}
-            <button on:click={() => editItem(step)}>Edit</button>
-            <button on:click={() => deleteItem(step)}>Delete</button>
+            <div class="button-wrapper">
+                <button on:click={() => editItem(step)}>Edit</button>
+                <button on:click={() => deleteItem(step)}>Delete</button>
+            </div>
             {/if}
         </div>
     </div>

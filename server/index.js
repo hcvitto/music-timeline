@@ -61,14 +61,18 @@ db.initialize(dbName, collectionName, function(dbCollection) { // success callba
   // update an item
   // return ***
   app.put('/step', (request, response) => {
-    const query = { "_id": new mongo.ObjectId(request.body.id) };
+    const query = { "_id": new mongo.ObjectId(request.body._id) };
     const data = request.body;
-    dbCollection.findOneAndUpdate(
+    dbCollection.updateOne(
       query,
       {
-        $set: data
+        $set: {
+          "date": data.date, 
+          "pos": data.pos, 
+          "title": data.title, 
+          "description": data.description 
+        }
       },
-      {},
       (error, result) => {
         if (error) throw error;
         const res = { saved: result.ok ? true : false }

@@ -87,7 +87,6 @@ input[type=text] {
     <input type="hidden" name="_id" value={editingObj._id}>
     <input type="hidden" name="id" value={editingObj.id}>
     {/if}
-    o: {o.date}
     <div>
         <label>Date</label>
         <input type="text" name="date" bind:value={o.date}>
@@ -105,7 +104,7 @@ input[type=text] {
         <textarea name="description" rows="5" bind:value={o.description}></textarea>
     </div>
     <div>   
-        <button disabled={!o.date && !o.pos && !o.title && !o.description}>{ editingObj ? "Edit" : "Insert" }</button>
+        <button disabled={!o.date || !o.pos || !o.title || !o.description}>{ editingObj ? "Edit" : "Insert" }</button>
         <button type="reset" on:click={resetForm}>Reset</button>
     </div>
 </form>

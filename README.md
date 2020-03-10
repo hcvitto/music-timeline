@@ -2,26 +2,46 @@
 
 ---
 
-# svelte app
+# Music timeline svelte app
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+Test app for svelte + firebase auth + CRUD mongoDb on mongoAtlas
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+## Settings
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
+### FRONTEND
+
+Create a file src/config/settings.js with firebase setting from Fb console, ie: 
+
+```javascript
+export const firebaseConfig = {
+    apiKey: "apiKey",
+    authDomain: "authDomain",
+    databaseURL: "databaseURL",
+    projectId: "projectId",
+    storageBucket: "storageBucket",
+    messagingSenderId: "messagingSenderId",
+    appId: "appId"
+};
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+### BACKEND
 
+Create a file server/settings.js with connection data to mongoAtlas db, ie: 
+
+const mongoAtlasConnection = 'mongodb+srv://username:password@cluster0-usira.mongodb.net/test';
+
+module.exports = {
+    mongoAtlasConnection
+};
 
 ## Get started
 
 Install the dependencies...
 
+### FRONTEND
+
 ```bash
-cd svelte-app
+cd music-timeline
 npm install
 ```
 
@@ -30,6 +50,18 @@ npm install
 ```bash
 npm run dev
 ```
+
+### BACKEND
+
+```bash
+cd server
+npm install
+```
+```bash
+node index.js
+```
+
+## Navigate app
 
 Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
 
