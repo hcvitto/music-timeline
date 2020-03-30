@@ -5,10 +5,6 @@
 * {
 	margin: 0;
 	padding: 0;
-	outline: 0;
-}
-*:focus {
-	outline: 0;
 }
 html, body {
 	position: relative;
@@ -73,14 +69,13 @@ h1, h2, h3 {
 
 #wrapper {
 	height: 100%;
-}
-header {
-	height: 80px;
-}
-#main-content {
-	align-items: center;
-	display: flex;
-	height: calc(100vh - 80px);
+
+	header {
+		height: 80px;
+	}
+	#main-content {
+		height: calc(100vh - 80px);
+	}
 }
 @media only screen and (max-width: 767px) {
 	#wrapper {

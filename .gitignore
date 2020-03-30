@@ -1,4 +1,9 @@
 /node_modules/
 /public/build/
+/src/config/firebase/settings.js
+/src/package-lock.json
+/server/node_modules/
+/server/package-lock.json
+/server/settings.js
 
 .DS_Store
