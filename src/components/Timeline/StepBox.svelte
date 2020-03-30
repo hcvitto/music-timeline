@@ -49,9 +49,6 @@ function toggleFixed() {
     isFixed = !isFixed;
 }
 function editItem(step) {
-    console.log('editItem:', step);
-    // TODO
-    // update store with editin object
     appStore.update(store => {
         store = {
             ...store,
@@ -59,9 +56,6 @@ function editItem(step) {
         };
         return store
     });
-    // show insert form to edit with selected step
-    // send data to BE
-    // update store
 }
 onDestroy(unsubscribe);
 </script>
@@ -103,6 +97,15 @@ li {
         &:hover {
             z-index: 10;
         }
+        &:before {
+            background: #30475e;
+            content: ' ';
+            height: 0;
+            left: calc(50% + 1px);
+            position: absolute;
+            transition: height ease-in-out .30s;
+            width: 2px;
+        }
 
         strong {
             font-size: .8rem;
@@ -114,6 +117,8 @@ li {
         }
         .description {
             font-size: .8rem;
+            max-height: 150px;
+            overflow: auto;
             word-break: break-word
         }
         .button-wrapper {
@@ -125,24 +130,32 @@ li {
     }
     &:nth-child(odd) {
         .info-box {
-            transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(0);
+            transform: translateX(calc(-50% + 5px)) translateY(35px) scale(0);
+            &:before {
+                top: 0;
+                transform: translateY(calc(-100% - 1px));
+            }
         }
         &.visible,
         &.isFixed {
             .info-box {
-                transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(1);
+                transform: translateX(calc(-50% + 5px)) translateY(35px) scale(1);
             }
         }
     }
     &:nth-child(even) {
         .info-box {
-            transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(0);
+            transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 35px)) scale(0);
+            &:before {
+                bottom: 0;
+                transform: translateY(calc(100% + 1px));
+            }
         }
         &.visible,
         &.isFixed {
             .info-box {
-                transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(1);
-            }
+                transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 35px)) scale(1);
+           }
         }
     }
     &.visible,
@@ -152,7 +165,10 @@ li {
         }
         .info-box {
             opacity: 1;
-        }
+            &:before {
+                height: 25px;
+            }
+       }
     }
 
 }

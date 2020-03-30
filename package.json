@@ -4,6 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "server": "cd server && npm run start",
     "start": "sirv public"
   },
   "devDependencies": {
