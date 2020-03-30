@@ -5,6 +5,7 @@ import { appStore } from '../../store/store';
 
 export let step;
 export let windowWidth;
+export let windowHeight;
 export let canWrite = false;
 
 let steps;
@@ -19,6 +20,7 @@ let box;
 let isVisible;
 let isFixed;
 $: leftPos = windowWidth * (+step.pos) / currentYear;
+$: boxHeight = canWrite ? ((windowHeight - 160) / 2) : ((windowHeight - 100) / 2);
 
 async function deleteItem(step) {
     if (confirm('Are you sure?')) {
@@ -87,12 +89,12 @@ li {
         border-radius: 10px;
         box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
         left: 0;
-        width: 150px;
         opacity: 0;
         padding: 10px;
         position: absolute;
         top: 0;
         transition: all ease-in-out .15s;
+        width: 150px;
         z-index: 2;
         &:hover {
             z-index: 10;
@@ -117,7 +119,6 @@ li {
         }
         .description {
             font-size: .8rem;
-            max-height: 150px;
             overflow: auto;
             word-break: break-word
         }
@@ -176,10 +177,10 @@ li {
 <li class="step" class:visible={isVisible} class:isFixed={isFixed} style="left: { leftPos }px">
     <div class="box-wrapper">
         <div class="pointer" on:click={toggleFixed} on:mouseover={toggleInfo} on:mouseout={toggleInfo}></div>
-        <div class="info-box">
+        <div class="info-box" style="max-height: {boxHeight}px">
             <strong>{ step.date }</strong>
             <div class="title">{ step.title }</div>
-            <div class="description">{ step.description }</div>
+            <div class="description" style="max-height: {boxHeight - 150}px">{ step.description }</div>
             {#if canWrite}
             <div class="button-wrapper">
                 <button on:click={() => editItem(step)}>Edit</button>

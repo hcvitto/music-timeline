@@ -62,7 +62,7 @@ function updateStorage(store) {
     transform: translateX(110%);
     transition: .5s ease all;
     width: 200px;
-    z-index: 1;
+    z-index: 3;
 
     &.isOpen {
         transform: translateX(-10%);

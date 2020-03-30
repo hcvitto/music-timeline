@@ -10,6 +10,7 @@ import StepBox from './StepBox.svelte';
 let canWrite = false;
 let steps;
 let width;
+let windowHeight;
 let user;
 $: appStore.subscribe(store => {
     steps = store.history;
@@ -50,11 +51,11 @@ async function getTimeline() {
     width: 100%;
 }
 </style>
-<svelte:window bind:innerWidth={width}/>
+<svelte:window bind:innerWidth={width} bind:innerHeight={windowHeight}/>
 <div class="timeline-wrapper">
     <ul class="timeline">
     {#each steps as curr}
-        <StepBox step={curr} windowWidth={width} canWrite={canWrite}></StepBox>
+        <StepBox step={curr} windowWidth={width} windowHeight={windowHeight} canWrite={canWrite}></StepBox>
 	{/each}
     </ul>
 
