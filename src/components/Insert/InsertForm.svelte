@@ -57,27 +57,6 @@ function resetForm() {
 input[type=text] {
     width: 100%;
 }
-.album-proposal {
-    background: #eee;
-    margin: 15px 0;
-    padding: 15px 10px;
-
-    h4 {
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    img {
-        max-width: 100%;
-    }
-    .choice-buttons {
-        display: flex;
-        justify-content: space-around;
-
-        > div {
-
-        }
-    }
-}
 </style>
 
 <h3>{ editingObj ? "Edit" : "Insert new" } event</h3>
@@ -93,7 +72,7 @@ input[type=text] {
     </div>
     <div>
         <label>Pos</label>
-        <input type="number" name="pos" bind:value={o.pos}>
+        <input type="number" name="pos" min="1" max="2020" bind:value={o.pos}>
     </div>
     <div>
         <label>Title</label>

@@ -5,6 +5,7 @@ import { appStore } from '../../store/store';
 
 export let step;
 export let windowWidth;
+export let windowHeight;
 export let canWrite = false;
 
 let steps;
@@ -19,6 +20,7 @@ let box;
 let isVisible;
 let isFixed;
 $: leftPos = windowWidth * (+step.pos) / currentYear;
+$: boxHeight = canWrite ? ((windowHeight - 160) / 2) : ((windowHeight - 100) / 2);
 
 async function deleteItem(step) {
     if (confirm('Are you sure?')) {
@@ -49,9 +51,6 @@ function toggleFixed() {
     isFixed = !isFixed;
 }
 function editItem(step) {
-    console.log('editItem:', step);
-    // TODO
-    // update store with editin object
     appStore.update(store => {
         store = {
             ...store,
@@ -59,9 +58,6 @@ function editItem(step) {
         };
         return store
     });
-    // show insert form to edit with selected step
-    // send data to BE
-    // update store
 }
 onDestroy(unsubscribe);
 </script>
@@ -93,15 +89,24 @@ li {
         border-radius: 10px;
         box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
         left: 0;
-        width: 150px;
         opacity: 0;
         padding: 10px;
         position: absolute;
         top: 0;
         transition: all ease-in-out .15s;
+        width: 150px;
         z-index: 2;
         &:hover {
             z-index: 10;
+        }
+        &:before {
+            background: #30475e;
+            content: ' ';
+            height: 0;
+            left: calc(50% + 1px);
+            position: absolute;
+            transition: height ease-in-out .30s;
+            width: 2px;
         }
 
         strong {
@@ -114,6 +119,7 @@ li {
         }
         .description {
             font-size: .8rem;
+            overflow: auto;
             word-break: break-word
         }
         .button-wrapper {
@@ -125,24 +131,32 @@ li {
     }
     &:nth-child(odd) {
         .info-box {
-            transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(0);
+            transform: translateX(calc(-50% + 5px)) translateY(35px) scale(0);
+            &:before {
+                top: 0;
+                transform: translateY(calc(-100% - 1px));
+            }
         }
         &.visible,
         &.isFixed {
             .info-box {
-                transform: translateX(calc(-50% + 5px)) translateY(calc(10% + 10px)) scale(1);
+                transform: translateX(calc(-50% + 5px)) translateY(35px) scale(1);
             }
         }
     }
     &:nth-child(even) {
         .info-box {
-            transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(0);
+            transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 35px)) scale(0);
+            &:before {
+                bottom: 0;
+                transform: translateY(calc(100% + 1px));
+            }
         }
         &.visible,
         &.isFixed {
             .info-box {
-                transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 15px)) scale(1);
-            }
+                transform: translateX(calc(-50% + 5px)) translateY(calc(-100% - 35px)) scale(1);
+           }
         }
     }
     &.visible,
@@ -152,7 +166,10 @@ li {
         }
         .info-box {
             opacity: 1;
-        }
+            &:before {
+                height: 25px;
+            }
+       }
     }
 
 }
@@ -160,10 +177,10 @@ li {
 <li class="step" class:visible={isVisible} class:isFixed={isFixed} style="left: { leftPos }px">
     <div class="box-wrapper">
         <div class="pointer" on:click={toggleFixed} on:mouseover={toggleInfo} on:mouseout={toggleInfo}></div>
-        <div class="info-box">
+        <div class="info-box" style="max-height: {boxHeight}px">
             <strong>{ step.date }</strong>
             <div class="title">{ step.title }</div>
-            <div class="description">{ step.description }</div>
+            <div class="description" style="max-height: {boxHeight - 150}px">{ step.description }</div>
             {#if canWrite}
             <div class="button-wrapper">
                 <button on:click={() => editItem(step)}>Edit</button>
