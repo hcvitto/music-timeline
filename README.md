@@ -57,6 +57,7 @@ npm install
 
 ```bash
 npm run dev
+npm run server
 ```
 
 ### BACKEND
